@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Games.ViewModels
 {
-    class AddGameWindowViewModel : MainWindowViewModel
+    public class AddGameWindowViewModel
     {
-        public AddGameWindowViewModel(fromModels.GameConsoleViewModel cmodel) : base()
+        public AddGameWindowViewModel(fromModels.GameConsoleViewModel cmodel)
         {
             //SelectedItem.Console = cmodel.GetConsoleModel();
         }
 
-        public void AddMethod(object param)
+        /*public void AddMethod(object param)
         {
             if (!String.IsNullOrEmpty(SelectedItem.Name))
             {
@@ -49,7 +49,7 @@ namespace Games.ViewModels
                 StagedGames = queryGames(queryG);
                 con.Close();
             }
-        }
+        }*/
 
     }
 }

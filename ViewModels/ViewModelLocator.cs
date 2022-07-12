@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Games.ViewModels
 {
     public class ViewModelLocator
     {
-        //public MainWindowViewModel MainWindow => App.ServiceProvider.GetRequiredService<MainWindowViewModel>();
+        public ViewModels.MainWindowViewModel MainViewModel => App.ServiceProvider.GetRequiredService<ViewModels.MainWindowViewModel>();
+
+        public ViewModels.AddGameWindowViewModel AddGameViewModel => App.ServiceProvider.GetRequiredService<ViewModels.AddGameWindowViewModel>();
     }
-    
 }

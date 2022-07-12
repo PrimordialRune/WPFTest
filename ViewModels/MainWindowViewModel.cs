@@ -15,6 +15,11 @@ namespace Games.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         public string Title { get; set; }
+        private readonly Navigation.NavigationService navigationService;
+        private readonly Services.IServiceDB service;
+        private readonly Models.DBSettings settings;
+
+        public RelayCommand ExecuteCommand { get; }
 
         private fromModels.GameConsoleViewModel selectedPlatform = null;
         public fromModels.GameConsoleViewModel SelectedPlatform
@@ -134,10 +139,15 @@ namespace Games.ViewModels
         protected string queryG = "SELECT [g].[ID] AS [GameID], [g].[Title], [g].[Release_Date], [gp].[ConsoleID], [c].[Name] AS [ConsoleName], [c].[BrandID], [c].[BrandID], [br].[Name] AS [BrandName]" +
                                 "FROM [dbo].[Games] AS [g] JOIN [dbo].[_GamePlatforms] AS [gp] ON [g].[ID] = [gp].[GameID] JOIN [dbo].[Consoles] AS [c] ON [gp].[ConsoleID] = [c].[ID] JOIN [dbo].[Brands] AS [br] ON [c].[BrandID] = [br].[ID]";
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB service, IOptions<Models.DBSettings> options)
         {
             Title = InDesignMode ? "Design Mode" : "Console Games";
-            
+            this.navigationService = navigationService;
+            this.service = service;
+            settings = options.Value;
+
+            //ExecuteCommand = new RelayCommand(async () => await ExecuteAsync());
+
             StagedGames = queryGames(queryG);
             Consoles = new ObservableCollection<fromModels.GameConsoleViewModel>(StagedGames.Select(g => new fromModels.GameConsoleViewModel(g.Console)).GroupBy(c => c.ID, (key, c) => c.FirstOrDefault()).ToList());
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);

@@ -13,12 +13,59 @@ namespace Games
 {
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        private readonly IHost host;
+
+        public static IServiceProvider ServiceProvider { get; private set; }
+
+        public App()
         {
+            host = Host.CreateDefaultBuilder().ConfigureServices((context, services) => { ConfigureServices(context.Configuration, services);}).Build();
+
+            ServiceProvider = host.Services;
+        }
+
+        private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+        {
+            services.Configure<Models.DBSettings>(configuration.GetSection(nameof(Models.DBSettings)));
+            services.AddScoped<Services.IServiceDB, Services.ServiceGameDB>();
+
+            // Add NavigationService for the application.
+            services.AddScoped<Navigation.NavigationService>(serviceProvider =>
+            {
+                var navigationService = new Navigation.NavigationService(serviceProvider);
+                navigationService.Configure(Navigation.Windows.MainWindow, typeof(Views.MainWindowView));
+                navigationService.Configure(Navigation.Windows.AddGameWindow, typeof(Views.AddGameWindowView));
+
+                return navigationService;
+            });
+
+            // Register all ViewModels.
+            services.AddSingleton<ViewModels.MainWindowViewModel>();
+            services.AddSingleton<ViewModels.AddGameWindowViewModel>();
+
+            // Register all the Windows of the applications.
+            services.AddTransient<Views.MainWindowView>();
+            services.AddTransient<Views.AddGameWindowView>();
+        }
+
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            await host.StartAsync();
+
+            var navigationService = ServiceProvider.GetRequiredService<Navigation.NavigationService>();
+            await navigationService.ShowAsync(Navigation.Windows.MainWindow);
+
             base.OnStartup(e);
-            this.MainWindow = new Views.MainWindowView();
-            this.MainWindow.DataContext = new ViewModels.MainWindowViewModel();
-            this.MainWindow.Show();
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            using (host)
+            {
+                await host.StopAsync(TimeSpan.FromSeconds(5));
+            }
+
+            base.OnExit(e);
         }
 
     }
