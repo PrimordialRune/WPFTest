@@ -1,0 +1,41 @@
+﻿<Window x:Class="Games.Views.AddGameWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Games.Views"
+        xmlns:vm="clr-namespace:Games.ViewModels"
+        mc:Ignorable="d"
+        Title="AddGameWindowView" Height="200" Width="400"
+        d:DataContext="{d:DesignInstance vm:AddGameWindowViewModel, IsDesignTimeCreatable=True}">
+    <StackPanel>
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Game Name:"/>
+            <TextBox x:Name="_addGame" Grid.Row="0" Grid.Column="1" Text="{Binding Path=SelectedItem.Name}"/>
+            <TextBlock Grid.Row="1" Text="Console:"/>
+            <ComboBox x:Name="_addConsole" Grid.Column="1" Grid.Row="1" Width="auto" HorizontalAlignment="Right" SelectedItem="{Binding Path=SelectedItem.Console}" ItemsSource="{Binding Path=Consoles}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Grid.Row="2" Text="Release Date:"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedItem.ReleaseDate}"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="_addGameBtn" Command="{Binding Path=AddGame}" >Aggiungi</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>
