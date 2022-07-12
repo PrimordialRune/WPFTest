@@ -15,8 +15,6 @@ namespace Games.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         public string Title { get; set; }
-        public readonly IHost host;
-        public static IServiceProvider ServiceProvider { get; private set; }
 
         private fromModels.GameConsoleViewModel selectedPlatform = null;
         public fromModels.GameConsoleViewModel SelectedPlatform
@@ -66,11 +64,9 @@ namespace Games.ViewModels
 
         private void AddMethod(object param)
         {
-            var mainWindow = ServiceProvider.GetRequiredService<Views.AddGameWindowView>();
-            mainWindow.Show();
-            /*Views.AddGameWindowView GameView = new Views.AddGameWindowView();
-            GameView.DataContext = new ViewModels.AddGameWindowViewModel(service, settings, SelectedPlatform);
-            GameView.ShowDialog();*/
+            Views.AddGameWindowView GameView = new Views.AddGameWindowView();
+            GameView.DataContext = new ViewModels.AddGameWindowViewModel(SelectedPlatform);
+            GameView.ShowDialog();
         }
 
         private ObservableCollection<fromModels.GameViewModel> games = null;
@@ -134,25 +130,12 @@ namespace Games.ViewModels
                 con.Close();
             }
         }
-        private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
-        {
-            services.Configure<Models.DBSettings>(configuration.GetSection(nameof(Models.DBSettings)));
-            services.AddScoped<Services.IServiceDB, Services.ServiceGameDB>();
-            services.AddSingleton<ViewModels.AddGameWindowViewModel>();
-            services.AddTransient<Views.AddGameWindowView>();
-        }
 
         protected string queryG = "SELECT [g].[ID] AS [GameID], [g].[Title], [g].[Release_Date], [gp].[ConsoleID], [c].[Name] AS [ConsoleName], [c].[BrandID], [c].[BrandID], [br].[Name] AS [BrandName]" +
                                 "FROM [dbo].[Games] AS [g] JOIN [dbo].[_GamePlatforms] AS [gp] ON [g].[ID] = [gp].[GameID] JOIN [dbo].[Consoles] AS [c] ON [gp].[ConsoleID] = [c].[ID] JOIN [dbo].[Brands] AS [br] ON [c].[BrandID] = [br].[ID]";
 
-        private readonly Services.IServiceDB service;
-        private readonly Models.DBSettings settings;
-        public MainWindowViewModel( Services.IServiceDB service, IOptions<Models.DBSettings> options)
+        public MainWindowViewModel()
         {
-            host = Host.CreateDefaultBuilder().ConfigureServices((context, services) => { ConfigureServices(context.Configuration, services); }).Build();
-            ServiceProvider = host.Services;
-            this.service = service;
-            settings = options.Value;
             Title = InDesignMode ? "Design Mode" : "Console Games";
             
             StagedGames = queryGames(queryG);
@@ -160,12 +143,6 @@ namespace Games.ViewModels
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);
             SelectedItem = null;
             AddGame = new RelayCommand(AddMethod);
-        }
-        private Task ExecuteAsync()
-        {
-            var mainWindow = ServiceProvider.GetRequiredService<Views.AddGameWindowView>();
-            mainWindow.Show();
-            return Task.CompletedTask;
         }
     }
 }

@@ -6,11 +6,5 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             mc:Ignorable="d">
     <Application.Resources>
-        <ResourceDictionary>
-            <vm:ViewModelLocator
-                xmlns:vm="clr-namespace:Games.ViewModels"
-                x:Key="Locator"
-                d:IsDataSource="True" />
-        </ResourceDictionary>
     </Application.Resources>
 </Application>
