@@ -16,8 +16,8 @@ namespace Games.ViewModels
     {
         public string Title { get; set; }
         private readonly Navigation.NavigationService navigationService;
-        private readonly Services.IServiceDB service;
-        private readonly Models.DBSettings settings;
+        private readonly Services.IServiceDB<Models.Game> DBservice;
+        private Models.DBSettings settings;
 
         public RelayCommand ExecuteCommand { get; }
 
@@ -64,20 +64,31 @@ namespace Games.ViewModels
             }
         }
 
-        private void DeleteMethod(object param) { deleteGameRow(); Games.Remove(SelectedItem); }
+        private void DeleteMethod(object param) {
+            settings.Action = "removeGame";
+            DBservice.ExecuteDBDelete(settings, SelectedItem.ID);
+            settings.Action = "queryGames";
+            StagedGames = DBservice.ExecuteDBQuery(settings).ToList();
+            Games.Remove(SelectedItem); 
+        }
         private bool DeleteCanExec(object param) { return SelectedItem != null; }
 
-        private void AddMethod(object param)
+        private async void AddMethod()
         {
-            Views.AddGameWindowView GameView = new Views.AddGameWindowView();
+            await ShowDialogAsync();
+            /*Views.AddGameWindowView GameView = new Views.AddGameWindowView();
             GameView.DataContext = new ViewModels.AddGameWindowViewModel(SelectedPlatform);
-            GameView.ShowDialog();
+            GameView.ShowDialog();*/
+        }
+        private Task ShowDialogAsync()
+        {
+            return navigationService.ShowDialogAsync(Navigation.Windows.AddGameWindow, SelectedItem);
         }
 
         private ObservableCollection<fromModels.GameViewModel> games = null;
         public ObservableCollection<fromModels.GameViewModel> Games  { get => games; private set { games = value; Notify();} }
         
-        public static List<Models.Game> StagedGames { get; protected set; }
+        public List<Models.Game> StagedGames { get; set; }
         
         public RelayCommand RemoveGame { get; private set; }
         public RelayCommand AddGame { get; private set; }
@@ -86,73 +97,21 @@ namespace Games.ViewModels
         
         protected string connString = "Data Source=TIQ-STAGE;Initial Catalog=games;Integrated Security=True";
 
-        public List<Models.Game> queryGames(string query)
-        {
-            var games = new List<Models.Game>();
-
-            using (SqlConnection con = new SqlConnection(connString))
-            {
-                con.Open();
-                using (SqlCommand command = new SqlCommand(query, con))
-                using (SqlDataReader dr = command.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        games.Add(new Models.Game()
-                        {
-                            Id = dr.GetInt32(dr.GetOrdinal("GameID")),
-                            Name = dr.GetString(dr.GetOrdinal("Title")),
-                            ReleaseDate = dr.GetDateTime(dr.GetOrdinal("Release_Date")),
-                            Console = new Models.GameConsole()
-                            {
-                                Id = dr.GetInt32(dr.GetOrdinal("ConsoleID")),
-                                Name = dr.GetString(dr.GetOrdinal("ConsoleName")),
-                                Brand = new Models.ConsoleBrand() 
-                                {
-                                    Id=dr.GetInt16(dr.GetOrdinal("BrandID")),
-                                    Name=dr.GetString(dr.GetOrdinal("BrandName"))
-                                }
-                            }
-                        });
-                    }
-                }
-                con.Close();
-                return games;
-            }
-        }
-
-        public void deleteGameRow()
-        {
-            using (SqlConnection con = new SqlConnection(connString))
-            {
-                con.Open();
-                using (SqlCommand command = new SqlCommand("DELETE FROM [dbo].[Games] WHERE ID = @ID", con))
-                {
-                    command.Parameters.AddWithValue("@ID", SelectedItem.ID);
-                    command.ExecuteNonQuery();
-                }
-                StagedGames = queryGames(queryG);
-                con.Close();
-            }
-        }
-
-        protected string queryG = "SELECT [g].[ID] AS [GameID], [g].[Title], [g].[Release_Date], [gp].[ConsoleID], [c].[Name] AS [ConsoleName], [c].[BrandID], [c].[BrandID], [br].[Name] AS [BrandName]" +
-                                "FROM [dbo].[Games] AS [g] JOIN [dbo].[_GamePlatforms] AS [gp] ON [g].[ID] = [gp].[GameID] JOIN [dbo].[Consoles] AS [c] ON [gp].[ConsoleID] = [c].[ID] JOIN [dbo].[Brands] AS [br] ON [c].[BrandID] = [br].[ID]";
-
-        public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB service, IOptions<Models.DBSettings> options)
+        public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice, IOptions<Models.DBSettings> options)
         {
             Title = InDesignMode ? "Design Mode" : "Console Games";
             this.navigationService = navigationService;
-            this.service = service;
+            this.DBservice = DBservice;
             settings = options.Value;
-
+            //StagedGames = service.ExecuteDBActionGame(new Models.DBSettings() { ConnString=connString, Action=queryG, Type=Models.ActionType.Query}, this);
             //ExecuteCommand = new RelayCommand(async () => await ExecuteAsync());
-
-            StagedGames = queryGames(queryG);
+            settings.Action = "queryGames";
+            StagedGames = DBservice.ExecuteDBQuery(settings).ToList();
+            //StagedGames = queryGames(queryG);
             Consoles = new ObservableCollection<fromModels.GameConsoleViewModel>(StagedGames.Select(g => new fromModels.GameConsoleViewModel(g.Console)).GroupBy(c => c.ID, (key, c) => c.FirstOrDefault()).ToList());
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);
             SelectedItem = null;
-            AddGame = new RelayCommand(AddMethod);
+            //AddGame = new RelayCommand(AddMethod);
         }
     }
 }

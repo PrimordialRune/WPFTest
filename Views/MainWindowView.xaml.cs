@@ -23,37 +23,6 @@ namespace Games.Views
         public MainWindowView()
         {
             InitializeComponent();
-
-            /*try
-            {
-                SqlConnection thisConnection = new SqlConnection(@"Data Source=TIQ-STAGE;Initial Catalog=games;Integrated Security=True");
-                thisConnection.Open();
-
-                string Get_Data = "SELECT * FROM emp";
-
-                SqlCommand cmd = thisConnection.CreateCommand();
-                cmd.CommandText = Get_Data;
-
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable("emp");
-                sda.Fill(dt);
-
-                dataGrid1.ItemsSource = dt.DefaultView;
-            }
-            catch
-            {
-                MessageBox.Show("db error");
-            }*/
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void _btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-            
         }
     }
 }

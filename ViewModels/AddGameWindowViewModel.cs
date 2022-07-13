@@ -10,6 +10,7 @@ namespace Games.ViewModels
         public AddGameWindowViewModel(fromModels.GameConsoleViewModel cmodel)
         {
             //SelectedItem.Console = cmodel.GetConsoleModel();
+
         }
 
         /*public void AddMethod(object param)

@@ -27,7 +27,7 @@ namespace Games
         private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
         {
             services.Configure<Models.DBSettings>(configuration.GetSection(nameof(Models.DBSettings)));
-            services.AddScoped<Services.IServiceDB, Services.ServiceGameDB>();
+            services.AddScoped<Services.IServiceDB<Models.Game>, Services.GameDBService>();
 
             // Add NavigationService for the application.
             services.AddScoped<Navigation.NavigationService>(serviceProvider =>
@@ -54,6 +54,7 @@ namespace Games
 
             var navigationService = ServiceProvider.GetRequiredService<Navigation.NavigationService>();
             await navigationService.ShowAsync(Navigation.Windows.MainWindow);
+
 
             base.OnStartup(e);
         }

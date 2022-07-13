@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Games.Services
 {
-    public interface IServiceDB
+    public interface IServiceDB<T> where T : class
     {
-        bool ExecuteDBAction(Models.DBSettings settings);
+        IEnumerable<T> ExecuteDBQuery(Models.DBSettings settings);
+        int ExecuteDBDelete(Models.DBSettings settings, int id);
     }
 }

@@ -63,7 +63,6 @@ C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.GeneratedMSBuild
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.AssemblyInfoInputs.cache
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.AssemblyInfo.cs
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.csproj.CoreCompileInputs.cache
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.csproj.CopyComplete
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.dll
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.pdb
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.genruntimeconfig.cache
