@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:Games.Views"
         xmlns:vm="clr-namespace:Games.ViewModels"
         mc:Ignorable="d"
-        Title="AddGameWindowView" Height="200" Width="400"
-        d:DataContext="{d:DesignInstance vm:AddGameWindowViewModel, IsDesignTimeCreatable=True}">
+        Title="AddGameWindowView" Height="200" Width="400">
     <StackPanel>
         <Grid Margin="8">
             <Grid.ColumnDefinitions>
@@ -24,7 +23,7 @@
             <TextBlock Grid.Row="0" Text="Game Name:"/>
             <TextBox x:Name="_addGame" Grid.Row="0" Grid.Column="1" Text="{Binding Path=SelectedItem.Name}"/>
             <TextBlock Grid.Row="1" Text="Console:"/>
-            <ComboBox x:Name="_addConsole" Grid.Column="1" Grid.Row="1" Width="auto" HorizontalAlignment="Right" SelectedItem="{Binding Path=SelectedItem.Console}" ItemsSource="{Binding Path=Consoles}">
+            <ComboBox x:Name="_addConsole" Grid.Column="1" Grid.Row="1" Width="auto" HorizontalAlignment="Right" SelectedItem="{Binding Path=SelectedPlatform}" ItemsSource="{Binding Path=Consoles}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Name}"/>

@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Games.ViewModels
 {
-    public class AddGameWindowViewModel : BaseViewModel, Navigation.IActivable
+    public class AddGameWindowViewModel : MainWindowViewModel, Navigation.IActivable
     {
-        public AddGameWindowViewModel(fromModels.GameConsoleViewModel cmodel)
+        public AddGameWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice) : base(navigationService,DBservice)
         {
-            //SelectedItem.Console = cmodel.GetConsoleModel();
 
         }
         public Task ActivateAsync(object parameter)
         {
+            SelectedPlatform = (fromModels.GameConsoleViewModel) parameter;
             return Task.CompletedTask;
         }
 

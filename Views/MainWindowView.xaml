@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:Games.Views"
         mc:Ignorable="d"
         Title="{Binding Path=Title}" 
-        Height="450" Width="600"
-        d:DataContext="{Binding Source={StaticResource Locator}, Path=MainWindowViewModel}">
+        Height="450" Width="600">
     
     <Window.Resources>
         <local:BoolToVisibleConverter x:Key="BoolToVisible"/>

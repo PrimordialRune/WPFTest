@@ -17,7 +17,6 @@ namespace Games.ViewModels
         public string Title { get; set; }
         private readonly Navigation.NavigationService navigationService;
         private readonly Services.IServiceDB<Models.Game> DBservice;
-        private Models.DBSettings settings;
         public RelayCommand ExecuteCommand { get; }
         private fromModels.GameConsoleViewModel selectedPlatform = null;
         public fromModels.GameConsoleViewModel SelectedPlatform
@@ -60,20 +59,20 @@ namespace Games.ViewModels
         }
         private void DeleteMethod(object param) 
         {
-            DBservice.SetAction("removeGame");
+            DBservice.SetAction("deleteGame");
             DBservice.ExecuteDBDelete(SelectedItem.ID);
-            settings.Action = "queryGames";
+            DBservice.SetAction("queryGames");
             StagedGames = DBservice.ExecuteDBQuery().ToList();
             Games.Remove(SelectedItem);
         }
         private bool DeleteCanExec(object param) { return SelectedItem != null; }
-        private async void AddMethod()
+        private void AddMethod(object param)
         {
-            await ShowDialogAsync();
+            ShowDialogAsync();
         }
         private Task ShowDialogAsync()
         {
-            return navigationService.ShowDialogAsync(Navigation.Windows.AddGameWindow, SelectedItem);
+            return navigationService.ShowDialogAsync(Navigation.Windows.AddGameWindow, SelectedPlatform);
         }
 
         private ObservableCollection<fromModels.GameViewModel> games = null;
@@ -82,17 +81,17 @@ namespace Games.ViewModels
         public RelayCommand RemoveGame { get; private set; }
         public RelayCommand AddGame { get; private set; }
         public ObservableCollection<fromModels.GameConsoleViewModel> Consoles { get; private set; }
-        public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice, IOptions<Models.DBSettings> options)
+        public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice)
         {
             Title = InDesignMode ? "Design Mode" : "Console Games";
             this.navigationService = navigationService;
             this.DBservice = DBservice;
-            settings = options.Value;
+            DBservice.SetAction("queryGames");
             StagedGames = DBservice.ExecuteDBQuery().ToList();
             Consoles = new ObservableCollection<fromModels.GameConsoleViewModel>(StagedGames.Select(g => new fromModels.GameConsoleViewModel(g.Console)).GroupBy(c => c.ID, (key, c) => c.FirstOrDefault()).ToList());
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);
             SelectedItem = null;
-            //AddGame = new RelayCommand(AddMethod);
+            AddGame = new RelayCommand(AddMethod);
         }
     }
 }

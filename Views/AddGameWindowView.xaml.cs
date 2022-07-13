@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -19,6 +20,7 @@ namespace Games.Views
     {
         public AddGameWindowView()
         {
+            DataContext= App.ServiceProvider.GetRequiredService<ViewModels.AddGameWindowViewModel>();
             InitializeComponent();
         }
     }

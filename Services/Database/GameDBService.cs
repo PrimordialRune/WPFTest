@@ -20,27 +20,29 @@ namespace Games.Services
             {
                 using (SqlConnection con = new SqlConnection(Settings.ConnString))
                 using (SqlCommand command = new SqlCommand(Settings.Action, con) { CommandType = CommandType.StoredProcedure })
-                using (SqlDataReader dr = command.ExecuteReader())
                 {
                     con.Open();
-                    while (dr.Read())
+                    using (SqlDataReader dr = command.ExecuteReader())
                     {
-                        games.Add(new Models.Game()
+                        while (dr.Read())
                         {
-                            Id = dr.GetInt32(dr.GetOrdinal("GameID")),
-                            Name = dr.GetString(dr.GetOrdinal("Title")),
-                            ReleaseDate = dr.GetDateTime(dr.GetOrdinal("Release_Date")),
-                            Console = new Models.GameConsole()
+                            games.Add(new Models.Game()
                             {
-                                Id = dr.GetInt32(dr.GetOrdinal("ConsoleID")),
-                                Name = dr.GetString(dr.GetOrdinal("ConsoleName")),
-                                Brand = new Models.ConsoleBrand()
+                                Id = dr.GetInt32(dr.GetOrdinal("GameID")),
+                                Name = dr.GetString(dr.GetOrdinal("Title")),
+                                ReleaseDate = dr.GetDateTime(dr.GetOrdinal("Release_Date")),
+                                Console = new Models.GameConsole()
                                 {
-                                    Id = dr.GetInt16(dr.GetOrdinal("BrandID")),
-                                    Name = dr.GetString(dr.GetOrdinal("BrandName"))
+                                    Id = dr.GetInt32(dr.GetOrdinal("ConsoleID")),
+                                    Name = dr.GetString(dr.GetOrdinal("ConsoleName")),
+                                    Brand = new Models.ConsoleBrand()
+                                    {
+                                        Id = dr.GetInt16(dr.GetOrdinal("BrandID")),
+                                        Name = dr.GetString(dr.GetOrdinal("BrandName"))
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                     con.Close();
                 }
@@ -77,6 +79,7 @@ namespace Games.Services
         }
         public void Configure(string connectionString)
         {
+            Settings = new Models.DBSettings();
             Settings.ConnString = connectionString;
         }
         public GameDBService(IServiceProvider serviceProvider)

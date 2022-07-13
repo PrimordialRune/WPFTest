@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,13 +16,11 @@ using System.Windows.Shapes;
 
 namespace Games.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindowView : Window
     {
         public MainWindowView()
         {
+            DataContext= App.ServiceProvider.GetRequiredService<ViewModels.MainWindowViewModel>();
             InitializeComponent();
         }
     }

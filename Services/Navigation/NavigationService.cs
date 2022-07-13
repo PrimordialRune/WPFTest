@@ -35,7 +35,7 @@ namespace Games.Navigation
         {
             var window = serviceProvider.GetRequiredService(windows[windowKey]) as Window;
 
-            if (window.DataContext is IActivable activable)
+            if (window is IActivable activable)
             {
                 await activable.ActivateAsync(parameter);
             }
