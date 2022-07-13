@@ -5,18 +5,21 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Linq;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace Games.Services
 {
     public class GameDBService : IServiceDB<Models.Game>
     {
-        public IEnumerable<Models.Game> ExecuteDBQuery(Models.DBSettings settings)
+        private readonly IServiceProvider serviceProvider;
+        public Models.DBSettings Settings { get; set; }
+        public IEnumerable<Models.Game> ExecuteDBQuery()
         {
             List<Models.Game> games = new List<Models.Game>();
             try
             {
-                using (SqlConnection con = new SqlConnection(settings.ConnString))
-                using (SqlCommand command = new SqlCommand(settings.Action, con) { CommandType = CommandType.StoredProcedure })
+                using (SqlConnection con = new SqlConnection(Settings.ConnString))
+                using (SqlCommand command = new SqlCommand(Settings.Action, con) { CommandType = CommandType.StoredProcedure })
                 using (SqlDataReader dr = command.ExecuteReader())
                 {
                     con.Open();
@@ -48,14 +51,13 @@ namespace Games.Services
             }
             return games;
         }
-
-        public int ExecuteDBDelete(Models.DBSettings settings, int id)
+        public int ExecuteDBDelete(int id)
         {
             int result = -1;
             try
             {
-                using (SqlConnection con = new SqlConnection(settings.ConnString))
-                using (SqlCommand command = new SqlCommand(settings.Action, con) { CommandType = CommandType.StoredProcedure })
+                using (SqlConnection con = new SqlConnection(Settings.ConnString))
+                using (SqlCommand command = new SqlCommand(Settings.Action, con) { CommandType = CommandType.StoredProcedure })
                 {
                     con.Open();
                     command.Parameters.AddWithValue("@Id", id);
@@ -68,6 +70,18 @@ namespace Games.Services
                 MessageBox.Show(ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             return result;
+        }
+        public void SetAction(string action)
+        {
+            Settings.Action = action;
+        }
+        public void Configure(string connectionString)
+        {
+            Settings.ConnString = connectionString;
+        }
+        public GameDBService(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
         }
     }
 }

@@ -1,10 +1,3 @@
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\AddGameWindowView.g.cs
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\MainWindowView.g.cs
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\App.g.cs
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games_MarkupCompile.cache
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games_MarkupCompile.lref
-C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.csproj.AssemblyReference.cache
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\Games.exe
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\Games.deps.json
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\Games.runtimeconfig.json
@@ -56,6 +49,13 @@ C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\runtimes\win\lib\netco
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 C:\Users\Stage\source\repos\Games\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.csproj.AssemblyReference.cache
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\AddGameWindowView.g.cs
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\MainWindowView.g.cs
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games_MarkupCompile.cache
+C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games_MarkupCompile.lref
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\AddGameWindowView.baml
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Views\MainWindowView.baml
 C:\Users\Stage\source\repos\Games\obj\Debug\netcoreapp3.1\Games.g.resources

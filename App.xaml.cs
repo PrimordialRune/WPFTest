@@ -14,22 +14,21 @@ namespace Games
     public partial class App : Application
     {
         private readonly IHost host;
-
         public static IServiceProvider ServiceProvider { get; private set; }
-
         public App()
         {
-            host = Host.CreateDefaultBuilder().ConfigureServices((context, services) => { ConfigureServices(context.Configuration, services);}).Build();
-
+            host = Host.CreateDefaultBuilder().ConfigureServices( services => { ConfigureServices(services);}).Build();
             ServiceProvider = host.Services;
         }
-
-        private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+        private void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<Models.DBSettings>(configuration.GetSection(nameof(Models.DBSettings)));
-            services.AddScoped<Services.IServiceDB<Models.Game>, Services.GameDBService>();
+            services.AddScoped<Services.IServiceDB<Models.Game>, Services.GameDBService>(serviceProvider =>
+            {
+                var DBservice = new Services.GameDBService(serviceProvider);
+                DBservice.Configure("Data Source=TIQ-STAGE;Initial Catalog=games;Integrated Security=True");
+                return DBservice;
+            });
 
-            // Add NavigationService for the application.
             services.AddScoped<Navigation.NavigationService>(serviceProvider =>
             {
                 var navigationService = new Navigation.NavigationService(serviceProvider);
@@ -39,33 +38,26 @@ namespace Games
                 return navigationService;
             });
 
-            // Register all ViewModels.
             services.AddSingleton<ViewModels.MainWindowViewModel>();
             services.AddSingleton<ViewModels.AddGameWindowViewModel>();
 
-            // Register all the Windows of the applications.
             services.AddTransient<Views.MainWindowView>();
             services.AddTransient<Views.AddGameWindowView>();
         }
-
         protected override async void OnStartup(StartupEventArgs e)
         {
             await host.StartAsync();
-
             var navigationService = ServiceProvider.GetRequiredService<Navigation.NavigationService>();
             await navigationService.ShowAsync(Navigation.Windows.MainWindow);
 
-
             base.OnStartup(e);
         }
-
         protected override async void OnExit(ExitEventArgs e)
         {
             using (host)
             {
                 await host.StopAsync(TimeSpan.FromSeconds(5));
             }
-
             base.OnExit(e);
         }
 

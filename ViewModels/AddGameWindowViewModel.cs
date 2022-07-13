@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Games.ViewModels
 {
-    public class AddGameWindowViewModel
+    public class AddGameWindowViewModel : BaseViewModel, Navigation.IActivable
     {
         public AddGameWindowViewModel(fromModels.GameConsoleViewModel cmodel)
         {
             //SelectedItem.Console = cmodel.GetConsoleModel();
 
         }
+        public Task ActivateAsync(object parameter)
+        {
+            return Task.CompletedTask;
+        }
+
 
         /*public void AddMethod(object param)
         {

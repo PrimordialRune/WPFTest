@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Games.Services
 {
     public interface IServiceDB<T> where T : class
     {
-        IEnumerable<T> ExecuteDBQuery(Models.DBSettings settings);
-        int ExecuteDBDelete(Models.DBSettings settings, int id);
+        Models.DBSettings Settings { get; set; }
+        IEnumerable<T> ExecuteDBQuery();
+        int ExecuteDBDelete(int id);
+        void SetAction(string action);
     }
 }

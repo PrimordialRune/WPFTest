@@ -4,8 +4,7 @@ namespace Games.ViewModels
 {
     public class ViewModelLocator
     {
-        public ViewModels.MainWindowViewModel MainWindowViewModel => App.ServiceProvider.GetRequiredService<ViewModels.MainWindowViewModel>();
-
-        public ViewModels.AddGameWindowViewModel AddGameWindowViewModel => App.ServiceProvider.GetRequiredService<ViewModels.AddGameWindowViewModel>();
+        public MainWindowViewModel MainWindowViewModel => App.ServiceProvider.GetRequiredService<MainWindowViewModel>();
+        public AddGameWindowViewModel AddGameWindowViewModel => App.ServiceProvider.GetRequiredService<AddGameWindowViewModel>();
     }
 }

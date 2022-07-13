@@ -18,9 +18,7 @@ namespace Games.ViewModels
         private readonly Navigation.NavigationService navigationService;
         private readonly Services.IServiceDB<Models.Game> DBservice;
         private Models.DBSettings settings;
-
         public RelayCommand ExecuteCommand { get; }
-
         private fromModels.GameConsoleViewModel selectedPlatform = null;
         public fromModels.GameConsoleViewModel SelectedPlatform
         {
@@ -35,10 +33,8 @@ namespace Games.ViewModels
                 Notify();
             }
         }
-
         private bool platformSelected = false;
         public bool PlatformSelected { get => platformSelected; private set { platformSelected = value; Notify(); } }
-        
         private fromModels.GameViewModel selectedItem = null;
         public fromModels.GameViewModel SelectedItem
         {
@@ -51,7 +47,6 @@ namespace Games.ViewModels
                 RemoveGame.RaiseCanExecuteChanged();
             }
         }
-
         private string searchText = "";
         public string SearchText 
         {
@@ -63,22 +58,18 @@ namespace Games.ViewModels
                 Games = new ObservableCollection<fromModels.GameViewModel>(StagedGames.Select(g => new fromModels.GameViewModel(g)).Where(g => g.Name.ToUpper().StartsWith(searchText.ToUpper())).Where(g => g.Console.Name == selectedPlatform.Name).ToList()) ;
             }
         }
-
-        private void DeleteMethod(object param) {
-            settings.Action = "removeGame";
-            DBservice.ExecuteDBDelete(settings, SelectedItem.ID);
+        private void DeleteMethod(object param) 
+        {
+            DBservice.SetAction("removeGame");
+            DBservice.ExecuteDBDelete(SelectedItem.ID);
             settings.Action = "queryGames";
-            StagedGames = DBservice.ExecuteDBQuery(settings).ToList();
-            Games.Remove(SelectedItem); 
+            StagedGames = DBservice.ExecuteDBQuery().ToList();
+            Games.Remove(SelectedItem);
         }
         private bool DeleteCanExec(object param) { return SelectedItem != null; }
-
         private async void AddMethod()
         {
             await ShowDialogAsync();
-            /*Views.AddGameWindowView GameView = new Views.AddGameWindowView();
-            GameView.DataContext = new ViewModels.AddGameWindowViewModel(SelectedPlatform);
-            GameView.ShowDialog();*/
         }
         private Task ShowDialogAsync()
         {
@@ -87,27 +78,17 @@ namespace Games.ViewModels
 
         private ObservableCollection<fromModels.GameViewModel> games = null;
         public ObservableCollection<fromModels.GameViewModel> Games  { get => games; private set { games = value; Notify();} }
-        
         public List<Models.Game> StagedGames { get; set; }
-        
         public RelayCommand RemoveGame { get; private set; }
         public RelayCommand AddGame { get; private set; }
-        
         public ObservableCollection<fromModels.GameConsoleViewModel> Consoles { get; private set; }
-        
-        protected string connString = "Data Source=TIQ-STAGE;Initial Catalog=games;Integrated Security=True";
-
         public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice, IOptions<Models.DBSettings> options)
         {
             Title = InDesignMode ? "Design Mode" : "Console Games";
             this.navigationService = navigationService;
             this.DBservice = DBservice;
             settings = options.Value;
-            //StagedGames = service.ExecuteDBActionGame(new Models.DBSettings() { ConnString=connString, Action=queryG, Type=Models.ActionType.Query}, this);
-            //ExecuteCommand = new RelayCommand(async () => await ExecuteAsync());
-            settings.Action = "queryGames";
-            StagedGames = DBservice.ExecuteDBQuery(settings).ToList();
-            //StagedGames = queryGames(queryG);
+            StagedGames = DBservice.ExecuteDBQuery().ToList();
             Consoles = new ObservableCollection<fromModels.GameConsoleViewModel>(StagedGames.Select(g => new fromModels.GameConsoleViewModel(g.Console)).GroupBy(c => c.ID, (key, c) => c.FirstOrDefault()).ToList());
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);
             SelectedItem = null;
