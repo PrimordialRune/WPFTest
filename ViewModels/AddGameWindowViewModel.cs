@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,10 @@ namespace Games.ViewModels
     {
         public AddGameWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice) : base(navigationService,DBservice)
         {
-
+            AddGame = new RelayCommand(AddMethod);
+            SelectedItem = new fromModels.GameViewModel(new Models.Game());
+            SelectedPlatform = new fromModels.GameConsoleViewModel(new Models.GameConsole());
+            
         }
         public Task ActivateAsync(object parameter)
         {
@@ -18,45 +22,21 @@ namespace Games.ViewModels
             return Task.CompletedTask;
         }
 
-
-        /*public void AddMethod(object param)
+        public void AddMethod(object param)
         {
             if (!String.IsNullOrEmpty(SelectedItem.Name))
             {
-                AddGameRow(SelectedItem);
+                SelectedItem.Console = SelectedPlatform.GetConsoleModel();
+                DBservice.SetAction("insertGame");
+                DBservice.ExecuteDBInsert(SelectedItem);
+                DBservice.SetAction("queryGames");
+                StagedGames = DBservice.ExecuteDBQuery().ToList();
+                Games.Add(SelectedItem);
+                //TODO Close Window On Insert
+                //await navigationService.CloseAsync(Navigation.Windows.AddGameWindow);
             }
-        }
 
-        public void AddGameRow(fromModels.GameViewModel game)
-        {
-            int gameID;
-            using (SqlConnection con = new SqlConnection(connString))
-            {
-                con.Open();
-                using (SqlCommand command = new SqlCommand("INSERT INTO [dbo].[Games](Title, Release_Date, Publisher, Engine) VALUES(@Name, @ReleaseDate, NTD02341, null)", con))
-                {
-                    command.Parameters.AddWithValue("@Name", SelectedItem.Name);
-                    command.Parameters.AddWithValue("@ReleaseDate", SelectedItem.ReleaseDate);
-                    command.ExecuteNonQuery();
-                }
-                using (SqlCommand command = new SqlCommand("SELECT TOP 1 * FROM [dbo].[Games] ORDER BY ID DESC", con))
-                {
-                    using (SqlDataReader dr = command.ExecuteReader())
-                    {
-                        dr.Read();
-                        gameID = dr.GetInt32(dr.GetOrdinal("ID"));
-                    }
-                }
-                using (SqlCommand command = new SqlCommand("INSERT INTO [dbo].[_GamePlatform](GameID, ConsoleID) VALUES(@GameID, @ConsoleID)", con))
-                {
-                    command.Parameters.AddWithValue("@GameID", gameID);
-                    command.Parameters.AddWithValue("@ConsoleID", SelectedItem.Console.Id);
-                    command.ExecuteNonQuery();
-                }
-                StagedGames = queryGames(queryG);
-                con.Close();
-            }
-        }*/
+        }
 
     }
 }

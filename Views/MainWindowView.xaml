@@ -50,6 +50,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding Path=PlatformSelected, Converter={StaticResource BoolToVisible}}">
             <Button x:Name="_btnAdd" Margin="8" Command="{Binding Path=AddGame}" Content="Aggiungi"/>
             <Button x:Name="_btnDelete" Margin="8" Command="{Binding Path=RemoveGame}" Content="Cancella"/>
+            <!--<Button x:Name="_btnUpdate" Margin="8" Command="{Binding Path=UpdateGame}" Content="Aggiorna"/>-->
         </StackPanel>
     </StackPanel>
     <!--Visibility="{Binding Path=PlatformSelected, Converter={StaticResource BoolToVisible}}-->

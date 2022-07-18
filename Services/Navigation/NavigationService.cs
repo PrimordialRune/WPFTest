@@ -42,5 +42,18 @@ namespace Games.Navigation
 
             return window;
         }
+        public async Task CloseAsync(string windowKey, object parameter = null)
+        {
+
+            var window = serviceProvider.GetRequiredService(windows[windowKey]) as Window;
+
+            if (window is IActivable activable)
+            {
+                await activable.ActivateAsync(parameter);
+            }
+
+            window.Close();
+        }
+
     }
 }

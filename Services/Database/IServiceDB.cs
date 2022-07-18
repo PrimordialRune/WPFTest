@@ -10,6 +10,7 @@ namespace Games.Services
         Models.DBSettings Settings { get; set; }
         IEnumerable<T> ExecuteDBQuery();
         int ExecuteDBDelete(int id);
+        int ExecuteDBInsert(object parameter);
         void SetAction(string action);
     }
 }

@@ -31,10 +31,10 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock Grid.Row="2" Text="Release Date:"/>
-            <DatePicker Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedItem.ReleaseDate}"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" Text="{Binding Path=SelectedItem.ReleaseDate, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="_addGameBtn" Command="{Binding Path=AddGame}" >Aggiungi</Button>
+            <Button x:Name="_addGameBtn" Command="{Binding Path=AddGame}" Content="Aggiungi"/>
         </StackPanel>
     </StackPanel>
 </Window>

@@ -15,8 +15,8 @@ namespace Games.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         public string Title { get; set; }
-        private readonly Navigation.NavigationService navigationService;
-        private readonly Services.IServiceDB<Models.Game> DBservice;
+        protected Navigation.NavigationService navigationService;
+        protected Services.IServiceDB<Models.Game> DBservice;
         public RelayCommand ExecuteCommand { get; }
         private fromModels.GameConsoleViewModel selectedPlatform = null;
         public fromModels.GameConsoleViewModel SelectedPlatform
@@ -65,6 +65,12 @@ namespace Games.ViewModels
             StagedGames = DBservice.ExecuteDBQuery().ToList();
             Games.Remove(SelectedItem);
         }
+        /*private void UpdateMethod(object param)
+        {
+            DBservice.SetAction("queryGames");
+            StagedGames = DBservice.ExecuteDBQuery().ToList();
+            Games = new ObservableCollection<fromModels.GameViewModel>(StagedGames.Select(g => new fromModels.GameViewModel(g)).ToList());
+        }*/
         private bool DeleteCanExec(object param) { return SelectedItem != null; }
         private void AddMethod(object param)
         {
@@ -79,7 +85,8 @@ namespace Games.ViewModels
         public ObservableCollection<fromModels.GameViewModel> Games  { get => games; private set { games = value; Notify();} }
         public List<Models.Game> StagedGames { get; set; }
         public RelayCommand RemoveGame { get; private set; }
-        public RelayCommand AddGame { get; private set; }
+        public RelayCommand AddGame { get; protected set; }
+        //public RelayCommand UpdateGame { get; protected set; }
         public ObservableCollection<fromModels.GameConsoleViewModel> Consoles { get; private set; }
         public MainWindowViewModel(Navigation.NavigationService navigationService, Services.IServiceDB<Models.Game> DBservice)
         {
@@ -92,6 +99,7 @@ namespace Games.ViewModels
             RemoveGame = new RelayCommand(DeleteMethod, DeleteCanExec);
             SelectedItem = null;
             AddGame = new RelayCommand(AddMethod);
+            //UpdateGame = new RelayCommand(UpdateMethod);
         }
     }
 }

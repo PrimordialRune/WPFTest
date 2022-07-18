@@ -73,6 +73,30 @@ namespace Games.Services
             }
             return result;
         }
+        public int ExecuteDBInsert(object parameter)
+        {
+            int result = -1;
+            ViewModels.fromModels.GameViewModel game = (ViewModels.fromModels.GameViewModel) parameter;
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Settings.ConnString))
+                using (SqlCommand command = new SqlCommand(Settings.Action, con) { CommandType = CommandType.StoredProcedure })
+                {
+                    con.Open();
+                    command.Parameters.AddWithValue("@Name", game.Name);
+                    command.Parameters.AddWithValue("@ReleaseDate", game.ReleaseDate);
+                    command.Parameters.AddWithValue("@ConsoleID", game.Console.Id);
+                    result = command.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            return result;
+        }
+
         public void SetAction(string action)
         {
             Settings.Action = action;
